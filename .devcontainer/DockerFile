@@ -1,0 +1,40 @@
+FROM ubuntu:24.04
+
+# Install software-properties-common to provide apt-add-repository
+RUN apt-get update && apt-get install -y software-properties-common
+
+# [Optional] Add SWI-Prolog stable PPA
+RUN apt-add-repository ppa:swi-prolog/stable
+
+# Update the package lists
+RUN apt-get update
+
+# # Set up working directory for SML/NJ installation
+# WORKDIR /tmp/smlnj
+
+# # Download and extract SML/NJ
+# RUN wget https://smlnj.org/dist/working/110.95/config.tgz \
+#     && tar -xzf config.tgz \
+#     && rm config.tgz
+
+# # Run the SML/NJ installation script
+# RUN chmod +x config/install.sh
+# RUN config/install.sh
+
+# # Remove the installation directory
+# RUN rm -rf /tmp/smlnj
+
+# # Reset the working directory
+# WORKDIR /workdir
+
+# Set non-interactive frontend (to skip any interactive post-install configuration steps)
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get install -y --no-install-recommends openjdk-11-jdk g++ make swi-prolog
+
+RUN apt-get install -y --no-install-recommends racket
+
+RUN apt-get install -y --no-install-recommends gnat
+
+# Cleanup to reduce image size
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
